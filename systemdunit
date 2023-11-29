@@ -1,0 +1,13 @@
+[Unit]
+Description=TZSP (tcpreplay+tzsp2pcap)
+After=network.target network-online.target
+Requires=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c "/usr/local/bin/tzsp2pcap -f | /usr/local/bin/tcpreplay-edit --topspeed --mtu=$(cat /sys/class/net/%I/mtu) --mtu-trunc -i %I -"
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
