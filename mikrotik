@@ -1,0 +1,9 @@
+#Обязательно измените 172.16.xxx.xxx на свой IP-адрес в защищённой сети
+/tool sniffer set streaming-enabled=yes streaming-server=172.16.xxx.xxx
+/ip firewall mangle add action=sniff-tzsp chain=prerouting sniff-target=172.16.xxx.xxx sniff-target-port=37008
+/system scheduler add interval=2h name=schedule1 on-event="/tool sniffer stop\r\
+    \n:delay 50s\r\
+    \n/tool sniffer start\r\
+    \n" policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon start-time=startup
+/ip firewall raw add chain=prerouting action=drop comment="Suricata suspended" src-address-list=Suricata
+/ip firewall raw add chain=prerouting action=drop comment="Suricata suspended" dst-address-list=Suricata
